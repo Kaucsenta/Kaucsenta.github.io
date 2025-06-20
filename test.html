@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Yarn Cursor Trail</title>
+  <title>Yarn Cursor Trail with Texture</title>
   <style>
     body {
       margin: 0;
@@ -67,22 +67,27 @@
       cursor.style.transform = `translate(${mouse.x}px, ${mouse.y}px)`;
     });
 
+    // Load knitted texture
+    const texture = new Image();
+    texture.src = 'knit_texture.png'; // Replace with your knitted texture image
+    let pattern;
+    texture.onload = () => {
+      pattern = ctx.createPattern(texture, 'repeat');
+    };
+
     function physics() {
-      // Verlet integration
       for (let p of rope) {
         const vx = (p.x - p.oldx) * 0.98;
-        const vy = (p.y - p.oldy) * 0.98 + 0.2; // gravity
+        const vy = (p.y - p.oldy) * 0.98 + 0.2;
         p.oldx = p.x;
         p.oldy = p.y;
         p.x += vx;
         p.y += vy;
       }
 
-      // stick the first point to the cursor
       rope[0].x = mouse.x;
       rope[0].y = mouse.y;
 
-      // Constrain points to simulate string
       for (let i = 0; i < 5; i++) {
         for (let j = 1; j < rope.length; j++) {
           const p1 = rope[j - 1];
@@ -107,14 +112,18 @@
 
     function drawYarn() {
       ctx.clearRect(0, 0, width, height);
+      if (pattern) {
+        ctx.strokeStyle = pattern;
+      } else {
+        ctx.strokeStyle = '#d49ac3';
+      }
+      ctx.lineWidth = 6;
+      ctx.lineCap = 'round';
       ctx.beginPath();
       ctx.moveTo(rope[0].x, rope[0].y);
       for (let i = 1; i < rope.length; i++) {
         ctx.lineTo(rope[i].x, rope[i].y);
       }
-      ctx.strokeStyle = '#d49ac3';
-      ctx.lineWidth = 2;
-      ctx.lineCap = 'round';
       ctx.stroke();
     }
 
