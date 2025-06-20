@@ -4,10 +4,12 @@
   <meta charset="UTF-8" />
   <title>DOM-Based Yarn Cursor</title>
   <style>
+    html, body, canvas, .custom-cursor {
+        cursor: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='), auto !important;
+    }
     body {
       margin: 0;
-      overflow: hidden;
-      cursor: none;
+      overflow: hidden;     
     }
     .custom-cursor {
       position: fixed;
