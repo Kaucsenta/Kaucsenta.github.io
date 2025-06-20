@@ -5,10 +5,9 @@
   <title>Yarn Cursor Trail with Texture</title>
   <style>
     body {
-      margin: 0;
-      overflow: hidden;
-      cursor: none;
-      cursor: url(needle_cursor.png),auto;
+  margin: 0;
+  overflow: hidden;
+  cursor: none !important;
     }
     canvas {
       position: fixed;
@@ -23,6 +22,7 @@
       left: 0;
       width: 32px;
       height: 32px;
+      background-image: url('needle_cursor.png'); /* Use your needle/yarn image */
       background-size: contain;
       background-repeat: no-repeat;
       pointer-events: none;
@@ -85,8 +85,8 @@
         p.y += vy;
       }
 
-      rope[0].x = mouse.x;
-      rope[0].y = mouse.y;
+      rope[0].x = mouse.x + 16; // offset to bottom right corner of 32px cursor
+      rope[0].y = mouse.y + 16;
 
       for (let i = 0; i < 5; i++) {
         for (let j = 1; j < rope.length; j++) {
