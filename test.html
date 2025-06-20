@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Single Yarn Trail Cursor</title>
+  <title>Wavy Yarn Trail Cursor</title>
   <style>
     html, body, canvas, .custom-cursor {
         cursor: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='), auto !important;
@@ -22,12 +22,13 @@
       pointer-events: none;
       z-index: 1001;
     }
-    .yarn-line {
+    .yarn-piece {
       position: fixed;
-      width: 4px;
+      width: 6px;
+      height: 6px;
       background-image: url('knit_texture.png');
       background-size: cover;
-      transform-origin: top left;
+      border-radius: 50%;
       pointer-events: none;
       z-index: 1000;
     }
@@ -35,14 +36,18 @@
 </head>
 <body>
   <div id="cursor" class="custom-cursor"></div>
-  <div id="yarn" class="yarn-line"></div>
-
   <script>
     const cursor = document.getElementById('cursor');
-    const yarn = document.getElementById('yarn');
+    const yarnCount = 20;
+    const yarn = [];
 
-    let yarnX = window.innerWidth / 2;
-    let yarnY = window.innerHeight / 2 + 100;
+    for (let i = 0; i < yarnCount; i++) {
+      const seg = document.createElement('div');
+      seg.classList.add('yarn-piece');
+      document.body.appendChild(seg);
+      yarn.push({ el: seg, x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    }
+
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
@@ -53,17 +58,19 @@
     });
 
     function animate() {
-      // Simulate heavy yarn with slow easing
-      yarnX += (mouseX - yarnX) * 0.05;
-      yarnY += (mouseY - yarnY) * 0.05;
+      for (let i = 0; i < yarn.length; i++) {
+        const seg = yarn[i];
+        const targetX = i === 0 ? mouseX : yarn[i - 1].x;
+        const targetY = i === 0 ? mouseY : yarn[i - 1].y;
 
-      const dx = mouseX - yarnX;
-      const dy = mouseY - yarnY;
-      const length = Math.sqrt(dx * dx + dy * dy);
-      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+        const wave = Math.sin(Date.now() / 100 + i * 0.6) * 4;
+        const ease = 0.15 - i * 0.002;
 
-      yarn.style.height = `${length}px`;
-      yarn.style.transform = `translate(${yarnX}px, ${yarnY}px) rotate(${angle}deg)`;
+        seg.x += (targetX - seg.x + wave) * ease;
+        seg.y += (targetY - seg.y + wave) * ease;
+
+        seg.el.style.transform = `translate(${seg.x}px, ${seg.y}px)`;
+      }
 
       requestAnimationFrame(animate);
     }
