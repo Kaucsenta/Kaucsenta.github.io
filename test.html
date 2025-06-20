@@ -7,7 +7,7 @@
     body {
   margin: 0;
   overflow: hidden;
-  cursor: 'needle_cursor.png';
+  cursor: url(needle_cursor.png), auto; /* Replace with your custom cursor */
     }
     canvas {
       position: fixed;
@@ -63,40 +63,40 @@
       pattern = ctx.createPattern(texture, 'repeat');
     };
 
-    function physics() {
-      for (let p of rope) {
-        const vx = (p.x - p.oldx) * 0.95;
-        const vy = (p.y - p.oldy) * 0.95 + 0.5;
-        p.oldx = p.x;
-        p.oldy = p.y;
-        p.x += vx;
-        p.y += vy;
-      }
+  function physics() {
+    for (let p of rope) {
+      const vx = (p.x - p.oldx) * 0.85;  // Less velocity retained (was 0.95)
+      const vy = (p.y - p.oldy) * 0.85 + 1.5; // More gravity pull (was 0.5)
+      p.oldx = p.x;
+      p.oldy = p.y;
+      p.x += vx;
+      p.y += vy;
+    }
 
-      rope[0].x = mouse.x + 16; // offset to bottom right corner of 32px cursor
-      rope[0].y = mouse.y + 16;
+    rope[0].x = mouse.x + 16;
+    rope[0].y = mouse.y + 16;
 
-      for (let i = 0; i < 5; i++) {
-        for (let j = 1; j < rope.length; j++) {
-          const p1 = rope[j - 1];
-          const p2 = rope[j];
-          const dx = p2.x - p1.x;
-          const dy = p2.y - p1.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const diff = (dist - 12) / dist;
-          const offsetX = dx * 0.5 * diff;
-          const offsetY = dy * 0.5 * diff;
+    for (let i = 0; i < 5; i++) {
+      for (let j = 1; j < rope.length; j++) {
+        const p1 = rope[j - 1];
+        const p2 = rope[j];
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const diff = (dist - 12) / dist;
+        const offsetX = dx * 0.5 * diff;
+        const offsetY = dy * 0.5 * diff;
 
-          if (j !== 1) {
-            p1.x += offsetX;
-            p1.y += offsetY;
-          }
-
-          p2.x -= offsetX;
-          p2.y -= offsetY;
+        if (j !== 1) {
+          p1.x += offsetX;
+          p1.y += offsetY;
         }
+
+        p2.x -= offsetX;
+        p2.y -= offsetY;
       }
     }
+  }
 
     function drawYarn() {
       ctx.clearRect(0, 0, width, height);
