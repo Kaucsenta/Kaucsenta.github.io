@@ -51,7 +51,7 @@
       canvas.height = height;
     });
 
-    const ropeLength = 25;
+    const ropeLength = 12;
     const rope = Array.from({ length: ropeLength }, (_, i) => ({
       x: width / 2,
       y: height / 2 + i * 10,
@@ -77,8 +77,8 @@
 
     function physics() {
       for (let p of rope) {
-        const vx = (p.x - p.oldx) * 0.98;
-        const vy = (p.y - p.oldy) * 0.98 + 0.2;
+        const vx = (p.x - p.oldx) * 0.95;
+        const vy = (p.y - p.oldy) * 0.95 + 0.5;
         p.oldx = p.x;
         p.oldy = p.y;
         p.x += vx;
@@ -95,7 +95,7 @@
           const dx = p2.x - p1.x;
           const dy = p2.y - p1.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          const diff = (dist - 10) / dist;
+          const diff = (dist - 12) / dist;
           const offsetX = dx * 0.5 * diff;
           const offsetY = dy * 0.5 * diff;
 
