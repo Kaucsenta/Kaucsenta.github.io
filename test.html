@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>DOM-Based Yarn Cursor</title>
+  <title>Single Yarn Trail Cursor</title>
   <style>
     html, body, canvas, .custom-cursor {
         cursor: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='), auto !important;
     }
     body {
       margin: 0;
-      overflow: hidden;     
+      overflow: hidden;
+      cursor: none;
     }
     .custom-cursor {
       position: fixed;
@@ -21,13 +22,12 @@
       pointer-events: none;
       z-index: 1001;
     }
-    .yarn-piece {
+    .yarn-line {
       position: fixed;
-      width: 8px;
-      height: 8px;
+      width: 4px;
       background-image: url('knit_texture.png');
       background-size: cover;
-      border-radius: 50%;
+      transform-origin: top left;
       pointer-events: none;
       z-index: 1000;
     }
@@ -35,19 +35,14 @@
 </head>
 <body>
   <div id="cursor" class="custom-cursor"></div>
+  <div id="yarn" class="yarn-line"></div>
 
   <script>
     const cursor = document.getElementById('cursor');
-    const yarnLength = 12;
-    const yarn = [];
+    const yarn = document.getElementById('yarn');
 
-    for (let i = 0; i < yarnLength; i++) {
-      const piece = document.createElement('div');
-      piece.classList.add('yarn-piece');
-      document.body.appendChild(piece);
-      yarn.push({ el: piece, x: window.innerWidth / 2, y: window.innerHeight / 2 });
-    }
-
+    let yarnX = window.innerWidth / 2;
+    let yarnY = window.innerHeight / 2 + 100;
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
@@ -58,27 +53,17 @@
     });
 
     function animate() {
-      let prevX = mouseX;
-      let prevY = mouseY;
+      // Simulate heavy yarn with slow easing
+      yarnX += (mouseX - yarnX) * 0.05;
+      yarnY += (mouseY - yarnY) * 0.05;
 
-      for (let i = 0; i < yarn.length; i++) {
-        let seg = yarn[i];
-        let dx = seg.x - prevX;
-        let dy = seg.y - prevY;
-        let dist = Math.sqrt(dx * dx + dy * dy);
-        let force = (dist - 12) * 0.2;
+      const dx = mouseX - yarnX;
+      const dy = mouseY - yarnY;
+      const length = Math.sqrt(dx * dx + dy * dy);
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
 
-        let offsetX = (dx / dist) * force;
-        let offsetY = (dy / dist) * force;
-
-        if (!isNaN(offsetX)) seg.x -= offsetX;
-        if (!isNaN(offsetY)) seg.y -= offsetY;
-
-        seg.el.style.transform = `translate(${seg.x}px, ${seg.y}px)`;
-
-        prevX = seg.x;
-        prevY = seg.y;
-      }
+      yarn.style.height = `${length}px`;
+      yarn.style.transform = `translate(${yarnX}px, ${yarnY}px) rotate(${angle}deg)`;
 
       requestAnimationFrame(animate);
     }
