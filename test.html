@@ -40,7 +40,7 @@
 
   <script>
     const cursor = document.getElementById('cursor');
-    const yarnCount = 40; // Number of segments in the yarn line
+    const yarnCount = 20; // Number of segments in the yarn line
     const yarn = []; // Array to hold yarn segment state objects
 
     // Initialize each yarn segment and add to the DOM
@@ -57,7 +57,7 @@
 
     // Update mouse position when the user moves their mouse
     document.addEventListener('mousemove', e => {
-      mouseX = e.clientX + 10; // Offset to bottom-right of cursor
+      mouseX = e.clientX ; // Offset to bottom-right of cursor
       mouseY = e.clientY + 16;
       cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
     });
@@ -75,7 +75,7 @@
         const wave = Math.sin(Date.now() / 120 + i * 0.5) * (i / yarn.length) * 2;
 
         // Adjust easing to make segments closely follow and react fast
-        const ease = 0.25 - i * 0.04;
+        const ease = 0.20 - i * 0.009;
 
         // Move the segment slightly toward its target, add wave and tiny jitter
         seg.x += (targetX - seg.x + wave + (Math.random() - 0.5) * 0.5) * ease;
