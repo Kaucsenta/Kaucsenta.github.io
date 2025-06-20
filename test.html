@@ -35,12 +35,15 @@
   </style>
 </head>
 <body>
+  <!-- Custom cursor -->
   <div id="cursor" class="custom-cursor"></div>
+
   <script>
     const cursor = document.getElementById('cursor');
-    const yarnCount = 25;
-    const yarn = [];
+    const yarnCount = 40; // Number of segments in the yarn line
+    const yarn = []; // Array to hold yarn segment state objects
 
+    // Initialize each yarn segment and add to the DOM
     for (let i = 0; i < yarnCount; i++) {
       const seg = document.createElement('div');
       seg.classList.add('yarn-piece');
@@ -48,33 +51,45 @@
       yarn.push({ el: seg, x: window.innerWidth / 2, y: window.innerHeight / 2 });
     }
 
+    // Store mouse position with offset so yarn ends in bottom-right corner of cursor
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
+    // Update mouse position when the user moves their mouse
     document.addEventListener('mousemove', e => {
-      mouseX = e.clientX + 16;
+      mouseX = e.clientX + 10; // Offset to bottom-right of cursor
       mouseY = e.clientY + 16;
       cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
     });
 
+    // Animate yarn segments to follow each other with waving and jittering
     function animate() {
       for (let i = 0; i < yarn.length; i++) {
         const seg = yarn[i];
+
+        // Each segment follows the previous one; the first follows the mouse
         const targetX = i === 0 ? mouseX : yarn[i - 1].x;
         const targetY = i === 0 ? mouseY : yarn[i - 1].y;
 
+        // Add a soft wave to simulate yarn movement (based on time and index)
         const wave = Math.sin(Date.now() / 120 + i * 0.5) * (i / yarn.length) * 2;
-        const ease = 0.18 - i * 0.008; // 10x tighter spacing and faster response
 
+        // Adjust easing to make segments closely follow and react fast
+        const ease = 0.25 - i * 0.04;
+
+        // Move the segment slightly toward its target, add wave and tiny jitter
         seg.x += (targetX - seg.x + wave + (Math.random() - 0.5) * 0.5) * ease;
         seg.y += (targetY - seg.y + wave + (Math.random() - 0.5) * 0.5) * ease;
 
+        // Apply the new position to the DOM element
         seg.el.style.transform = `translate(${seg.x}px, ${seg.y}px)`;
       }
 
+      // Continue the animation loop
       requestAnimationFrame(animate);
     }
 
+    // Start animation
     animate();
   </script>
 </body>
