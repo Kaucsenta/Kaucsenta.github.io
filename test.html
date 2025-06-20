@@ -38,7 +38,7 @@
   <div id="cursor" class="custom-cursor"></div>
   <script>
     const cursor = document.getElementById('cursor');
-    const yarnCount = 40;
+    const yarnCount = 20;
     const yarn = [];
 
     for (let i = 0; i < yarnCount; i++) {
@@ -64,7 +64,7 @@
         const targetY = i === 0 ? mouseY : yarn[i - 1].y;
 
         const wave = Math.sin(Date.now() / 120 + i * 0.5) * (i / yarn.length) * 2;
-        const ease = 0.25 - i * 0.008; // 10x tighter spacing and faster response
+        const ease = 0.18 - i * 0.008; // 10x tighter spacing and faster response
 
         seg.x += (targetX - seg.x + wave + (Math.random() - 0.5) * 0.5) * ease;
         seg.y += (targetY - seg.y + wave + (Math.random() - 0.5) * 0.5) * ease;
