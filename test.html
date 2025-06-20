@@ -7,7 +7,7 @@
     body {
   margin: 0;
   overflow: hidden;
-  cursor: none !important;
+  cursor: 'needle_cursor.png';
     }
     canvas {
       position: fixed;
@@ -16,23 +16,11 @@
       pointer-events: none;
       z-index: 1000;
     }
-    .custom-cursor {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 32px;
-      height: 32px;
-      background-image: url('needle_cursor.png'); /* Use your needle/yarn image */
-      background-size: contain;
-      background-repeat: no-repeat;
-      pointer-events: none;
-      z-index: 1001;
-    }
   </style>
 </head>
 <body>
   <canvas id="trail"></canvas>
-  <div class="custom-cursor" id="cursor"></div>
+  <div id="cursor"></div>
 
   <script>
     const canvas = document.getElementById('trail');
